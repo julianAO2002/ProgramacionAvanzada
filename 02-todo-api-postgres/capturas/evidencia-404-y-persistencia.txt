@@ -1,0 +1,84 @@
+================================================================================
+EVIDENCIA DE PRUEBAS - TP03 TODO API con Persistencia en PostgreSQL
+Generado el 2026-09-11 mediante curl contra la API corriendo en Docker Compose
+================================================================================
+
+--------------------------------------------------------------------------------
+1. CASOS 404 / 400 (manejo de errores)
+--------------------------------------------------------------------------------
+
+$ curl -i http://localhost:3001/tasks/9999
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{"error":"Task not found"}
+
+$ curl -i -X PUT http://localhost:3001/tasks/9999 -H "Content-Type: application/json" -d '{"status":"completed"}'
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{"error":"Task not found"}
+
+$ curl -i -X DELETE http://localhost:3001/tasks/9999
+HTTP/1.1 404 Not Found
+Content-Type: application/json; charset=utf-8
+
+{"error":"Task not found"}
+
+$ curl -i -X POST http://localhost:3001/tasks -H "Content-Type: application/json" -d '{"description":"sin titulo"}'
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{"error":"Title is required"}
+
+$ curl -i -X POST http://localhost:3001/tasks -H "Content-Type: application/json" -d '{"title":"Test","status":"en_progreso"}'
+HTTP/1.1 400 Bad Request
+Content-Type: application/json; charset=utf-8
+
+{"error":"Status must be one of: pending, completed"}
+
+
+--------------------------------------------------------------------------------
+2. PRUEBA DE PERSISTENCIA (Seccion 10.4 del PRD)
+--------------------------------------------------------------------------------
+
+PASO 1 - Crear una tarea nueva con POST
+$ curl -X POST http://localhost:3001/tasks -H "Content-Type: application/json" \
+    -d '{"title":"Prueba de persistencia","description":"Debe sobrevivir al restart","status":"pending"}'
+
+{"id":4,"title":"Prueba de persistencia","description":"Debe sobrevivir al restart",
+ "status":"pending","due_date":null,"created_at":"2026-09-11T19:47:23.945Z",
+ "updated_at":"2026-09-11T19:47:23.945Z"}
+
+PASO 2 - Estado ANTES del restart
+$ curl http://localhost:3001/tasks
+
+[{"id":2,"title":"Task 2",...},
+ {"id":3,"title":"Comprar leche y pan","status":"completed",...},
+ {"id":4,"title":"Prueba de persistencia","status":"pending",...}]
+
+PASO 3 - Reiniciar SOLO el contenedor de la API
+$ docker compose restart api
+
+ Container todo_api Restarting
+ Container todo_api Started
+
+PASO 4 - Estado DESPUES del restart
+$ curl http://localhost:3001/tasks
+
+[{"id":2,"title":"Task 2","description":"Description 2","status":"pending",
+  "due_date":"2026-08-16T00:00:00.000Z","created_at":"2026-09-09T18:59:43.972Z",
+  "updated_at":"2026-09-09T18:59:43.972Z"},
+ {"id":3,"title":"Comprar leche y pan","description":"Actualizado","status":"completed",
+  "due_date":"2026-09-20T00:00:00.000Z","created_at":"2026-09-11T19:39:52.338Z",
+  "updated_at":"2026-09-11T19:41:13.878Z"},
+ {"id":4,"title":"Prueba de persistencia","description":"Debe sobrevivir al restart",
+  "status":"pending","due_date":null,"created_at":"2026-09-11T19:47:23.945Z",
+  "updated_at":"2026-09-11T19:47:23.945Z"}]
+
+RESULTADO: las 3 tareas siguen presentes con los mismos id, created_at y
+updated_at. Los datos sobrevivieron al reinicio del contenedor de la API porque
+viven en el volumen todo_pgdata del contenedor de Postgres, que no fue tocado.
+
+Nota: el id 1 no aparece porque fue eliminado previamente con
+DELETE /tasks/1 durante las pruebas de endpoints.
