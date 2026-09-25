@@ -8,6 +8,7 @@ Sistemas de Información, FCyT - UADER.
 | TP | Tema | Estado |
 | --- | --- | --- |
 | [TP2 - Ejercitación JavaScript](./TP2%20-%20Ejercitacion%20-%20JavaScript/) | Objetos, funciones, consumo de APIs y arrays (40 ejercicios) | Resuelto |
+| [TP4 - Sesiones de pago y webhook Stripe](./TP4%20-%20Sesiones%20de%20pago%20y%20webhook%20Stripe/payments-ms/) | Microservicio NestJS: Stripe Checkout + webhook firmado | Resuelto |
 
 Cada TP vive en su propia carpeta, con la consigna en PDF, la resolución y un README
 propio que explica cómo ejecutarla.

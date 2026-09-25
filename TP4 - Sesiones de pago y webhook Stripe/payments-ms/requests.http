@@ -1,0 +1,59 @@
+### Pedidos de prueba (extensión REST Client de VS Code, o copiar a Postman)
+
+@base = http://localhost:3003/payments
+
+### 1. Crear sesión de pago (válido) -> 201 con id y url de Checkout
+POST {{base}}/create-payment-session
+Content-Type: application/json
+
+{
+  "orderId": "ord-1",
+  "currency": "usd",
+  "items": [
+    { "name": "Producto", "price": 20, "quantity": 1 },
+    { "name": "Envío", "price": 4.99, "quantity": 1 }
+  ]
+}
+
+### 2. Inválido: sin items -> 400
+POST {{base}}/create-payment-session
+Content-Type: application/json
+
+{
+  "orderId": "ord-1",
+  "currency": "usd"
+}
+
+### 3. Inválido: precio negativo -> 400
+POST {{base}}/create-payment-session
+Content-Type: application/json
+
+{
+  "orderId": "ord-1",
+  "currency": "usd",
+  "items": [{ "name": "Producto", "price": -20, "quantity": 1 }]
+}
+
+### 4. Inválido: campos extra -> 400
+POST {{base}}/create-payment-session
+Content-Type: application/json
+
+{
+  "orderId": "ord-1",
+  "currency": "usd",
+  "descuento": 50,
+  "items": [{ "name": "Producto", "price": 20, "quantity": 1 }]
+}
+
+### 5. Webhook sin firma válida -> 400
+POST {{base}}/webhook
+Content-Type: application/json
+stripe-signature: t=123,v1=firma-falsa
+
+{ "type": "charge.succeeded", "data": { "object": { "metadata": { "orderId": "ord-trucho" } } } }
+
+### 6. Redirects de Checkout
+GET {{base}}/success
+
+###
+GET {{base}}/cancel
