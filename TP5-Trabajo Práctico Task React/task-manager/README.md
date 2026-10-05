@@ -146,11 +146,3 @@ curl -X POST http://localhost:3001/api/tasks \
   -H "Content-Type: application/json" \
   -d '{"project_name":"Task React","activity_type":"bug","summary":"Probar alta","priority":"alta","reporter":"Julian"}'
 ```
-
-## Problema conocido: antivirus que inspecciona HTTPS
-
-Si `docker compose build` falla en `npm ci` con `UNABLE_TO_VERIFY_LEAF_SIGNATURE`, la
-causa suele ser un antivirus (por ejemplo, el escudo web de Avast) o un proxy
-corporativo que intercepta HTTPS. El sistema confía en su certificado, pero el
-contenedor no. Hay dos opciones: desactivar la inspección HTTPS mientras dura el build,
-o agregar el certificado de esa CA a la imagen de build (`NODE_EXTRA_CA_CERTS`).
