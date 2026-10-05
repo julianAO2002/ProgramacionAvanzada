@@ -1,0 +1,16 @@
+{
+  "name": "task-manager-api",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "description": "TP5: API REST de tareas de proyectos de software (Express + Postgres)",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "pg": "^8.23.1"
+  }
+}

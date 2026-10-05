@@ -9,6 +9,7 @@ Sistemas de Información, FCyT - UADER.
 | --- | --- | --- |
 | [TP2 - Ejercitación JavaScript](./TP2%20-%20Ejercitacion%20-%20JavaScript/) | Objetos, funciones, consumo de APIs y arrays (40 ejercicios) | Resuelto |
 | [TP4 - Sesiones de pago y webhook Stripe](./TP4%20-%20Sesiones%20de%20pago%20y%20webhook%20Stripe/payments-ms/) | Microservicio NestJS: Stripe Checkout + webhook firmado | Resuelto |
+| [TP5 - Task React](./TP5-Trabajo%20Pr%C3%A1ctico%20Task%20React/task-manager/) | Manejador de tareas: React + Vite, API Express, PostgreSQL y Docker Compose | Resuelto |
 
 Cada TP vive en su propia carpeta, con la consigna en PDF, la resolución y un README
 propio que explica cómo ejecutarla.
@@ -17,3 +18,5 @@ propio que explica cómo ejecutarla.
 
 - **Node.js 18 o superior** para correr los ejercicios de JavaScript desde la consola
   (`node archivo.js`).
+- **Docker Desktop** (o Docker Engine + Compose v2) para los TPs que se levantan con
+  `docker compose`.
